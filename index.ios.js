@@ -9,6 +9,8 @@ var {
 } = React;
 var Tabs = require('react-native-tabs');
 
+import FriendsTab from './components/Friends'
+
 class MessengerxReactNative extends React.Component {
   constructor(props){
     super(props);

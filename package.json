@@ -6,7 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "faker": "^3.0.1",
     "react-native": "^0.20.0",
+    "react-native-gifted-listview": "0.0.12",
     "react-native-tabs": "^0.1.10"
   }
 }
