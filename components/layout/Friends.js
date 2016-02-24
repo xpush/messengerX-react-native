@@ -8,6 +8,7 @@ var {
   TouchableHighlight
 } = React;
 
+import {Actions} from 'react-native-router-flux'
 import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
