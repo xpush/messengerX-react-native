@@ -28,9 +28,8 @@ var styles = StyleSheet.create({
 
 class Splash extends React.Component {
     componentDidMount() {
-        setTimeout(function(){
-            console.log("====== this is tabbar2 ===");                
-            Actions.friendsTab();
+        setTimeout(function(){              
+            Actions.login();
         }, 500 ) 
     }
     render(){

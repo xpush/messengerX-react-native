@@ -6,6 +6,7 @@ import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flu
 import FriendsTab from './Friends'
 import TabView from './TabView'
 import Splash from './Splash'
+import Login from './Login'
 
 class TabIcon extends React.Component {
     render(){
@@ -25,6 +26,7 @@ class App extends React.Component {
                 <Schema name="tab" type="switch" icon={TabIcon} />
 
                 <Route name="splash" component={Splash} initial={true} title="Splash"/>
+                <Route name="login" component={Login} title="Login"/>
                 <Route name="friendsTab" component={FriendsTab} title="Friends" />
             </Router>
         );
