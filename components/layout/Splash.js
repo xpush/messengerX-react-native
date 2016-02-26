@@ -29,7 +29,7 @@ var styles = StyleSheet.create({
 class Splash extends React.Component {
     componentDidMount() {
         setTimeout(function(){              
-            Actions.login();
+            Actions.tabbar();
         }, 500 ) 
     }
     render(){

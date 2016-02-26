@@ -1,59 +1,50 @@
 'use strict';
 
 var React = require('react-native');
-var {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-} = React;
-var Tabs = require('react-native-tabs');
+var {View, Text, StyleSheet} = React;
+var Button = require('react-native-button');
+var Actions = require('react-native-router-flux').Actions;
+
 
 class TabView extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {};
-  }
-  render() {
-    var self = this;
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to MessengerX!
-        </Text>
-        <Text style={styles.instructions}>
-          Selected page: {this.state.page}
-        </Text>
-        <Tabs selected="second" style={{backgroundColor:'white'}}
-              onSelect={function(el){self.setState({page: el.props.name});return {style:{color:'red'}}}}>
-            <Text name="first">First</Text>
-            <Text name="second">Second</Text>
-            <Text name="third">Third</Text>
-            <Text name="fourth">Fourth</Text>
-            <Text name="fifth">Fifth</Text>
-        </Tabs>
-      </View>
-    );
-  }
+    render(){
+        return (
+            <View style={styles.container}>
+                <Text>Tab {this.props.title}</Text>
+                {this.props.name === "tab1_1" &&
+                <Button onPress={Actions.tab1_2}>next screen for tab1_1</Button>
+                }
+                {this.props.name === "tab2_1" &&
+                <Button onPress={Actions.tab2_2}>next screen for tab2_1</Button>
+                }
+                <Button onPress={Actions.pop}>Back</Button>
+                <Button onPress={Actions.tab1}>Switch to tab1</Button>
+                <Button onPress={Actions.tab2}>Switch to tab2</Button>
+                <Button onPress={Actions.tab3}>Switch to tab3</Button>
+                <Button onPress={Actions.tab4}>Switch to tab4</Button>
+                <Button onPress={Actions.tab5}>Switch to tab5</Button>
+            </View>
+        );
+    }
 }
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#333333',
+        marginBottom: 5,
+    },
 });
 
 module.exports = TabView;

@@ -61,6 +61,7 @@ var Friends = React.createClass({
    */
   _onPress(rowData) {
     console.log(rowData+' pressed');
+    Actions.chat();
   },
 
   /**
