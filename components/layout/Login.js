@@ -1,4 +1,10 @@
 var React = require('react-native');
+var XPush = require('../libs/xpush');
+
+import {Actions} from 'react-native-router-flux'
+
+window.navigator.userAgent = 'react-native';
+
 var {
   View,
   Text,
@@ -6,6 +12,8 @@ var {
   TouchableHighlight,
   StyleSheet
 } = React;
+
+var SessionStore = require('../stores/SessionStore');
 
 var Login = React.createClass({
   getInitialState: function() {
@@ -48,7 +56,14 @@ var Login = React.createClass({
     );
   },
   onPress: function() {
-    console.log(this.state.userId);
+    var self = this;
+    xpush.login( self.state.userId, self.state.password, 'ionic', function(err, result){
+      var user = result.user;
+      user.PW = self.state.password;
+      SessionStore.save( user, function(res){
+        Actions.tabbar();
+      });
+    });
   }
 });
 

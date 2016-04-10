@@ -77,25 +77,25 @@ var Friends = React.createClass({
             underlayColor='#c8c7cc'
             onPress={() => this._onPress(rowData)}
         >  
-      <View>
-        <View style={ styles.row }>
-          <Image
-            source={ { uri: person.picture } }
-            style={ styles.cellImage } />
-          <View style={ styles.textContainer }>
-            <Text style={ styles.name } numberOfLines={ 1 }>
-              { person.name }
-            </Text>
-            <Text style={ styles.time } numberOfLines={ 1 }>
-              { person.name }
-            </Text>
-            <Text style={ styles.lastMessage } numberOfLines={ 1 }>
-              { person.text }
-            </Text>
+          <View>
+            <View style={ styles.row }>
+              <Image
+                source={ { uri: person.picture } }
+                style={ styles.cellImage } />
+              <View style={ styles.textContainer }>
+                <Text style={ styles.name } numberOfLines={ 1 }>
+                  { person.name }
+                </Text>
+                <Text style={ styles.time } numberOfLines={ 1 }>
+                  { person.name }
+                </Text>
+                <Text style={ styles.lastMessage } numberOfLines={ 1 }>
+                  { person.text }
+                </Text>
+              </View>
+            </View>
+            <View style={ styles.cellBorder } />
           </View>
-        </View>
-        <View style={ styles.cellBorder } />
-      </View>
         </TouchableHighlight>
         );
   },

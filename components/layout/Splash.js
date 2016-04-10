@@ -1,8 +1,13 @@
 
 'use strict';
 
-import React, {View, Text, StyleSheet, TouchableHighlight,Image} from 'react-native'
+import React, {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+
+var Constants = require('../Constants');
+var SessionStore = require('../stores/SessionStore');
+
+var XPush = require('../libs/xpush');
 
 var styles = StyleSheet.create({
     container: {
@@ -24,13 +29,21 @@ var styles = StyleSheet.create({
     }
 });
 
-
-
 class Splash extends React.Component {
     componentDidMount() {
-        setTimeout(function(){              
-            Actions.tabbar();
-        }, 500 ) 
+        setTimeout(function(){
+            SessionStore.get(function(user){
+
+              if( !user ){
+                Actions.login();  
+              } else {
+                XPush.INSTANCE.login( user.U, user.PW, 'ionic', function(err, result){
+                    Actions.tabbar();
+                });
+              }
+            });
+
+        }, 1000 ) 
     }
     render(){
         return (
