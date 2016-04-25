@@ -57,7 +57,7 @@ var Login = React.createClass({
   },
   onPress: function() {
     var self = this;
-    xpush.login( self.state.userId, self.state.password, 'ionic', function(err, result){
+    XPush.INSTANCE.login( self.state.userId, self.state.password, 'ionic', function(err, result){
       var user = result.user;
       user.PW = self.state.password;
       SessionStore.save( user, function(res){

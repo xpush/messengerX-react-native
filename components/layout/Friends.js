@@ -12,9 +12,12 @@ import {Actions} from 'react-native-router-flux'
 import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
+var XPush = require('../libs/xpush');
+
 
 var TESTED_COUNT = 10;
 
+/*
 var Tested_data = []
 
 for ( var i =0 ; i < TESTED_COUNT ; i++){
@@ -27,6 +30,7 @@ for ( var i =0 ; i < TESTED_COUNT ; i++){
    }
   ) 
 }
+*/
 
 var Friends = React.createClass({
 
@@ -38,20 +42,10 @@ var Friends = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    setTimeout(() => {
-      /*
-      var rows = ['row '+((page - 1) * 3 + 1), 'row '+((page - 1) * 3 + 2), 'row '+((page - 1) * 3 + 3)];
-      if (page === 3) {
-        callback(rows, {
-          allLoaded: true, // the end of the list is reached
-        });        
-      } else {
-        callback(rows);
-      }
-      */
-      callback(Tested_data);
-      
-    }, 1000); // simulating network fetching
+    console.log( XPush.INSTANCE.userId );
+    XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
+      callback( users );
+    });
   },
 
 
@@ -80,17 +74,17 @@ var Friends = React.createClass({
           <View>
             <View style={ styles.row }>
               <Image
-                source={ { uri: person.picture } }
+                source={ { uri: person.DT.I } }
                 style={ styles.cellImage } />
               <View style={ styles.textContainer }>
                 <Text style={ styles.name } numberOfLines={ 1 }>
-                  { person.name }
+                  { person.DT.NM }
                 </Text>
                 <Text style={ styles.time } numberOfLines={ 1 }>
-                  { person.name }
+                  { person.DT.NM  }
                 </Text>
                 <Text style={ styles.lastMessage } numberOfLines={ 1 }>
-                  { person.text }
+                  { person.DT.MG}
                 </Text>
               </View>
             </View>
@@ -108,8 +102,8 @@ var Friends = React.createClass({
           rowView={this._renderRowView}
           onFetch={this._onFetch}
           firstLoader={true} // display a loader for the first fetching
-          pagination={true} // enable infinite scrolling using touch to load more
-          refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+          pagination={false} // enable infinite scrolling using touch to load more
+          refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
           withSections={false} // enable sections
           customStyles={{
             refreshableView: {
