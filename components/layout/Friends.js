@@ -13,6 +13,7 @@ import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
 var XPush = require('../libs/xpush');
+var Utils = require('../Utils');
 
 
 var TESTED_COUNT = 10;
@@ -42,7 +43,6 @@ var Friends = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    console.log( XPush.INSTANCE.userId );
     XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
       callback( users );
     });
@@ -54,8 +54,10 @@ var Friends = React.createClass({
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
-    console.log(rowData+' pressed');
-    Actions.chat();
+    var jsonObject = {};
+    jsonObject.U = [rowData.U,XPush.INSTANCE.userId];
+    var channelId = Utils.generateChannelId( jsonObject );
+    Actions.chat({'data':channelId});
   },
 
   /**

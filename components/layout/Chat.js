@@ -2,6 +2,10 @@ import React, {Dimensions, Navigator, StyleSheet,  Text, View, TouchableHighligh
 var GiftedMessenger = require('react-native-gifted-messenger');
 
 var Chat = React.createClass({
+  componentDidMount() {
+    var channel = this.props.data;
+    console.log( channel );
+  },
   getMessages() {
     return [
       {text: 'Are you building a chat app?', name: 'React-Native', image: {uri: 'https://facebook.github.io/react/img/logo_og.png'}, position: 'left', date: new Date(2015, 0, 16, 19, 0)},
@@ -10,6 +14,9 @@ var Chat = React.createClass({
   },
   handleSend(message = {}, rowID = null) {
     // Send message.text to your server
+    XPush.INSTANCE.send( message, function( err, users ){
+      callback( users );
+    });
   },
   handleReceive() {
     this._GiftedMessenger.appendMessage({
