@@ -1,10 +1,27 @@
 import React, {Dimensions, Navigator, StyleSheet,  Text, View, TouchableHighlight} from 'react-native';
 var GiftedMessenger = require('react-native-gifted-messenger');
+var XPush = require('../libs/xpush');
+var SessionStore = require('../stores/SessionStore');
+
+var channelId  = "";
+var userObject;
 
 var Chat = React.createClass({
   componentDidMount() {
-    var channel = this.props.data;
-    console.log( channel );
+    var data = this.props.data;
+    channelId = data.C;
+    SessionStore.get(function(user){
+      userObject = user;
+
+      XPush.INSTANCE.createChannel(data.US, channelId, function(err, data){
+        console.log( 'create channel success : ', data);
+      });
+
+      XPush.INSTANCE.on('message', function(ch,name,data){
+        console.log( data.MG );
+      });
+    });
+
   },
   getMessages() {
     return [
@@ -14,9 +31,8 @@ var Chat = React.createClass({
   },
   handleSend(message = {}, rowID = null) {
     // Send message.text to your server
-    XPush.INSTANCE.send( message, function( err, users ){
-      callback( users );
-    });
+    var msg = encodeURIComponent( message.text  );
+    XPush.INSTANCE.send( channelId, 'message', { 'MG': msg, "UO" : {'NM':userObject.DT.NM,'I':userObject.DT.I,'U':userObject.DT.U} } );
   },
   handleReceive() {
     this._GiftedMessenger.appendMessage({

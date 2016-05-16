@@ -3,7 +3,6 @@ var Contants = require('./Constants');
 var Utils = {
   generateChannelId : function(jsonObj){
 
-    console.log( jsonObj );
     // multi user channel = generate uuid
     if( jsonObj.U.length > 2 ){
       return this.getUniqueKey()+"^"+Contants.APP_KEY;;
