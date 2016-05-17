@@ -8,6 +8,7 @@ var userObject;
 
 var Chat = React.createClass({
   componentDidMount() {
+    var self = this;
     var data = this.props.data;
     channelId = data.C;
     SessionStore.get(function(user){
@@ -18,30 +19,30 @@ var Chat = React.createClass({
       });
 
       XPush.INSTANCE.on('message', function(ch,name,data){
-        console.log( data.MG );
+        self.handleReceive( data );
       });
     });
 
   },
   getMessages() {
-    return [
-      {text: 'Are you building a chat app?', name: 'React-Native', image: {uri: 'https://facebook.github.io/react/img/logo_og.png'}, position: 'left', date: new Date(2015, 0, 16, 19, 0)},
-      {text: "Yes, and I use Gifted Messenger!", name: 'Developer', image: null, position: 'right', date: new Date(2015, 0, 17, 19, 0)},
-    ];
+    return [];
   },
   handleSend(message = {}, rowID = null) {
     // Send message.text to your server
     var msg = encodeURIComponent( message.text  );
-    XPush.INSTANCE.send( channelId, 'message', { 'MG': msg, "UO" : {'NM':userObject.DT.NM,'I':userObject.DT.I,'U':userObject.DT.U} } );
+    XPush.INSTANCE.send( channelId, 'message', { 'MG': msg, "UO" : {'NM':userObject.DT.NM,'I':userObject.DT.I,'U':userObject.U} } );
   },
-  handleReceive() {
-    this._GiftedMessenger.appendMessage({
-      text: 'Received message', 
-      name: 'Friend', 
-      image: {uri: 'https://facebook.github.io/react/img/logo_og.png'}, 
-      position: 'left', 
-      date: new Date(),
-    });
+  handleReceive(data) {
+
+    if( data.UO.U != userObject.U ) {
+      this._GiftedMessenger.appendMessage({
+        text: decodeURIComponent(data.MG), 
+        name: data.UO.NM, 
+        image: {uri: data.UO.I}, 
+        position: 'left', 
+        date: new Date(data.TS),
+      });
+    }
   },
   render() {
     return (
