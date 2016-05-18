@@ -4,6 +4,7 @@ var XPush = require('../libs/xpush');
 var SessionStore = require('../stores/SessionStore');
 
 var channelId  = "";
+
 var userObject;
 
 var Chat = React.createClass({
@@ -11,6 +12,7 @@ var Chat = React.createClass({
     var self = this;
     var data = this.props.data;
     channelId = data.C;
+
     SessionStore.get(function(user){
       userObject = user;
 
@@ -20,6 +22,28 @@ var Chat = React.createClass({
 
       XPush.INSTANCE.on('message', function(ch,name,data){
         self.handleReceive( data );
+      });
+
+      XPush.INSTANCE.getUnreadMessage( channelId, function(err, messages) {
+        for( var inx = 0; inx < messages.length ;inx++ ){
+          if( messages[inx].NM != 'message' ){
+            continue;
+          }
+
+          var data = JSON.parse( messages[inx].DT );
+
+          var side = "right";
+          var image = {};
+          if (data.UO.U != userObject.U) {
+            side = "left";
+            image = { "uri":data.UO.I};
+          } else {
+            image = null;
+          }
+
+          var tmpMsg = {text: decodeURIComponent(data.MG), name: data.UO.NM, image: image, position: side, date: new Date(data.TS)}
+          self._GiftedMessenger.appendMessage(tmpMsg);
+        }
       });
     });
 
@@ -48,7 +72,7 @@ var Chat = React.createClass({
     return (
       <View style={styles.container}>
         <View style={styles.navBar}>
-          <Text style={styles.navTitle}>Friend name</Text>
+          <Text style={styles.navTitle}>{this.props.data.NM}</Text>
         </View>
         <GiftedMessenger
           ref={(c) => this._GiftedMessenger = c}

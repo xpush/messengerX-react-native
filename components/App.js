@@ -17,7 +17,7 @@ var xpush = new XPush('http://54.178.160.166:8000', 'messengerx', function (type
   }
 }, false );
 
-xpush.enableDebug();
+//xpush.enableDebug();
 
 class TabIcon extends React.Component {
   render(){

@@ -57,7 +57,7 @@ var Friends = React.createClass({
     var jsonObject = {};
     jsonObject.U = [rowData.U,XPush.INSTANCE.userId];
     var channelId = Utils.generateChannelId( jsonObject );
-    Actions.chat({'data':{'C':channelId,'US':jsonObject.U}});
+    Actions.chat({'data':{'C':channelId,'US':jsonObject.U,'NM':rowData.DT.NM}});
   },
 
   /**
