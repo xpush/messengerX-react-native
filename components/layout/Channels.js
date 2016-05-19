@@ -9,29 +9,10 @@ var {
 } = React;
 
 import {Actions} from 'react-native-router-flux'
-import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
 var XPush = require('../libs/xpush');
 var Utils = require('../Utils');
-
-
-var TESTED_COUNT = 10;
-
-/*
-var Tested_data = []
-
-for ( var i =0 ; i < TESTED_COUNT ; i++){
-  Tested_data.push(
-    {id: faker.internet.email(),
-    picture: "http://quinnpalmer.co/wp-content/uploads/2013/04/Circle-Profile.png",
-    name:  faker.name.findName(),
-    text: faker.lorem.sentence(),
-    date: faker.date.past()
-   }
-  ) 
-}
-*/
 
 var Friends = React.createClass({
 
@@ -43,8 +24,8 @@ var Friends = React.createClass({
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
-      callback( users );
+    XPush.INSTANCE.getChannels( function( err, channels ){
+      callback( channels );
     });
   },
 
@@ -54,10 +35,7 @@ var Friends = React.createClass({
    * @param {object} rowData Row data
    */
   _onPress(rowData) {
-    var jsonObject = {};
-    jsonObject.U = [rowData.U,XPush.INSTANCE.userId];
-    var channelId = Utils.generateChannelId( jsonObject );
-    Actions.chat({'data':{'C':channelId,'US':jsonObject.U,'NM':rowData.DT.NM}});
+    Actions.chat({'data':{'C':rowData.channel,'NM':rowData.NM}});
   },
 
   /**
@@ -65,25 +43,29 @@ var Friends = React.createClass({
    * @param {object} rowData Row data
    */
   _renderRowView(rowData) {
-      var person = rowData;
+      var ch = rowData;
+      ch.name = ch.channel.replace( "^"+ch.app, "" );
 
-        return (
+      return (
         <TouchableHighlight 
-            style={styles.container} 
-            underlayColor='#c8c7cc'
-            onPress={() => this._onPress(rowData)}
+          style={styles.container} 
+          underlayColor='#c8c7cc'
+          onPress={() => this._onPress(rowData)}
         >  
           <View>
             <View style={ styles.row }>
               <Image
-                source={ { uri: person.DT.I } }
+                source={require('../images/face.png')}
                 style={ styles.cellImage } />
               <View style={ styles.textContainer }>
                 <Text style={ styles.name } numberOfLines={ 1 }>
-                  { person.DT.NM }
+                  { ch.name }
+                </Text>
+                <Text style={ styles.time } numberOfLines={ 1 }>
+                  { Utils.timeToString( ch.createDate )[2] }
                 </Text>
                 <Text style={ styles.lastMessage } numberOfLines={ 1 }>
-                  { person.DT.MG}
+                  { ch.latestMessage }
                 </Text>
               </View>
             </View>

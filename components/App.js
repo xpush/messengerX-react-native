@@ -4,6 +4,7 @@ import React, {AppRegistry, Navigator, StyleSheet, Text, View} from 'react-nativ
 import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 
 import FriendsTab from './layout/Friends'
+import ChannelsTab from './layout/Channels'
 import TabView from './layout/TabView'
 import Splash from './layout/Splash'
 import Login from './layout/Login'
@@ -43,7 +44,11 @@ class App extends React.Component {
                 <Route name="Friends" component={FriendsTab} title="Friends" />
               </Router>
             </Route>
-            <Route name="tab2" schema="tab" title="Tab #2" component={TabView}/>
+            <Route name="channelTab" schema="tab" title="Channels"  >
+              <Router>
+                <Route name="Channels" component={ChannelsTab} title="Channels" />
+              </Router>
+            </Route>
           </Router>
         </Route>
         <Route name="chat" component={Chat} title="Chat" />

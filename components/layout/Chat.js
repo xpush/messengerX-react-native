@@ -16,9 +16,11 @@ var Chat = React.createClass({
     SessionStore.get(function(user){
       userObject = user;
 
-      XPush.INSTANCE.createChannel(data.US, channelId, function(err, data){
-        console.log( 'create channel success : ', data);
-      });
+      if( data.US ){
+        XPush.INSTANCE.createChannel(data.US, channelId, function(err, data){
+          console.log( 'create channel success : ', data);
+        });
+      }
 
       XPush.INSTANCE.on('message', function(ch,name,data){
         self.handleReceive( data );
