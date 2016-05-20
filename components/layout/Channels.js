@@ -5,7 +5,8 @@ var {
   Image,
   View,
   PixelRatio,
-  TouchableHighlight
+  TouchableHighlight,
+  PushNotificationIOS
 } = React;
 
 import {Actions} from 'react-native-router-flux'

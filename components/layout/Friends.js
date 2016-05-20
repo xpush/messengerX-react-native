@@ -83,7 +83,7 @@ var Friends = React.createClass({
                   { person.DT.NM }
                 </Text>
                 <Text style={ styles.lastMessage } numberOfLines={ 1 }>
-                  { person.DT.MG}
+                  { person.DT.MG }
                 </Text>
               </View>
             </View>

@@ -1,7 +1,18 @@
-import React, {Dimensions, Navigator, StyleSheet,  Text, View, TouchableHighlight} from 'react-native';
+import React, {
+  Dimensions, 
+  Navigator, 
+  StyleSheet, 
+  Text, 
+  View, 
+  TouchableHighlight,
+  PushNotificationIOS,
+  AlertIOS,
+} from 'react-native';
+
 var GiftedMessenger = require('react-native-gifted-messenger');
 var XPush = require('../libs/xpush');
 var SessionStore = require('../stores/SessionStore');
+var PushNotification = require('react-native-push-notification');
 
 var channelId  = "";
 
@@ -9,6 +20,9 @@ var userObject;
 
 var Chat = React.createClass({
   componentDidMount() {
+
+    PushNotificationIOS.addEventListener('notification', this._onNotification);
+
     var self = this;
     var data = this.props.data;
     channelId = data.C;
@@ -50,6 +64,16 @@ var Chat = React.createClass({
     });
 
   },
+  _onNotification(notification){
+    AlertIOS.alert(
+      'Notification Received',
+      'Alert message: ' + notification.getMessage(),
+      [{
+        text: 'Dismiss',
+        onPress: null,
+      }]
+    );
+  },
   getMessages() {
     return [];
   },
@@ -69,9 +93,20 @@ var Chat = React.createClass({
         date: new Date(data.TS),
       });
     }
+
+    require('RCTDeviceEventEmitter').emit('remoteNotificationReceived', {
+      aps: {
+        alert: 'Sample local notification',
+        badge: '+1',
+        sound: 'default',
+        category: 'REACT_NATIVE'
+      },
+    });
   },
   render() {
+
     return (
+
       <View style={styles.container}>
         <View style={styles.navBar}>
           <Text style={styles.navTitle}>{this.props.data.NM}</Text>
