@@ -1,12 +1,5 @@
-var React = require('react-native');
-var {
-  StyleSheet,
-  Text,
-  Image,
-  View,
-  PixelRatio,
-  TouchableHighlight
-} = React;
+
+import React, {StyleSheet, Text, Image, View, PixelRatio, TouchableHighlight, NativeModules } from 'react-native'
 
 import {Actions} from 'react-native-router-flux'
 import faker from 'faker'
@@ -33,7 +26,13 @@ for ( var i =0 ; i < TESTED_COUNT ; i++){
 }
 */
 
+var XPushAndroid = NativeModules.XPushAndroid;
+
 var Friends = React.createClass({
+
+  componentDidMount() {
+    XPushAndroid.test();
+  },
 
   /**
    * Will be called when refreshing

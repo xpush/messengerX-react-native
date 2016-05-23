@@ -1,4 +1,4 @@
-package io.xpush.chat.core;
+package io.xpush.core;
 
 import android.text.TextUtils;
 import android.util.Log;
