@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -22,7 +23,9 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import io.socket.client.Socket;
+import io.socket.client.SocketIOException;
 import io.socket.emitter.Emitter;
+import io.socket.engineio.client.EngineIOException;
 
 /**
  * Created by james on 2016. 5. 22..
@@ -41,10 +44,13 @@ public class XPushModule extends ReactContextBaseJavaModule {
 
     private ChannelCore mChannelCore;
     private ReactContext mReactContext;
+    private Promise connectionPromise;
+    private Callback connectionCallback;
 
 
     public XPushModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        mReactContext = reactContext;
     }
 
     @Override
@@ -75,7 +81,18 @@ public class XPushModule extends ReactContextBaseJavaModule {
     private Emitter.Listener onConnectError = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            sendEvent(mReactContext, Socket.EVENT_CONNECT_ERROR, null);
+            System.out.println(Socket.EVENT_CONNECT_ERROR);
+            if( args[0] instanceof SocketIOException) {
+                SocketIOException e = (SocketIOException) args[0];
+                //connectionPromise.reject(e);
+                connectionCallback.invoke("error");
+            } else if ( args[0] instanceof  EngineIOException){
+                EngineIOException e = (EngineIOException) args[0];
+                //connectionPromise.reject(e);
+                connectionCallback.invoke("error");
+            }
+
+            //sendEvent(mReactContext, Socket.EVENT_CONNECT_ERROR, null);
         }
     };
 
@@ -83,7 +100,10 @@ public class XPushModule extends ReactContextBaseJavaModule {
         @Override
 
         public void call(Object... args) {
-            sendEvent(mReactContext, Socket.EVENT_CONNECT, null);
+            //System.out.println(Socket.EVENT_CONNECT );
+            //sendEvent(mReactContext, Socket.EVENT_CONNECT, null);
+            //connectionPromise.resolve("success");
+            connectionCallback.invoke("success");
         }
     };
 
@@ -109,20 +129,28 @@ public class XPushModule extends ReactContextBaseJavaModule {
                     e.printStackTrace();
                 }
                 WritableMap map = Arguments.fromBundle(bundle);
-                sendEvent(mReactContext, "message", map);
+                sendEvent(mReactContext, "onMessage", map);
             }
         }
     };
 
     @ReactMethod
-    public void connect(String appId, String mUserId, String mDeviceId, String channelId, String serveUrl, String serverName, Promise promise) {
+    public void connect(String appId, String mUserId, String mDeviceId, String channelId, String serveUrl, String serverName, Callback callback) {
         mChannelCore = new ChannelCore(appId,  mUserId,  mDeviceId,  channelId,  serveUrl,  serverName);
+        //connectionPromise = promise;
+        connectionCallback = callback;
         connectChannel();
     }
 
     @ReactMethod
     public void test(){
-        System.out.println( " 1111111111 " );
-        System.out.println( "TEST TEST TEST" );
+        System.out.println("TEST");
+    }
+
+    @ReactMethod
+    public void send(String message){
+        if( mChannelCore != null ){
+            mChannelCore.sendMessage(message);
+        }
     }
 }

@@ -1,5 +1,5 @@
 
-import React, {StyleSheet, Text, Image, View, PixelRatio, TouchableHighlight, NativeModules } from 'react-native'
+import React, {StyleSheet, Text, Image, View, PixelRatio, TouchableHighlight, NativeModules, DeviceEventEmitter } from 'react-native'
 
 import {Actions} from 'react-native-router-flux'
 import faker from 'faker'
@@ -31,7 +31,15 @@ var XPushAndroid = NativeModules.XPushAndroid;
 var Friends = React.createClass({
 
   componentDidMount() {
-    XPushAndroid.test();
+    //XPushAndroid.test();
+    XPushAndroid.connect( "messengerx", "james", "web", "channel01", "http://54.65.166.203:8080", "10", function(){
+      console.log( '--- connected --- ' );
+      XPushAndroid.send( "한글" );
+    });
+
+    DeviceEventEmitter.addListener( 'onMessage', function(message){
+      console.log( message );
+    });
   },
 
   /**
@@ -46,7 +54,6 @@ var Friends = React.createClass({
       callback( users );
     });
   },
-
 
   /**
    * When a row is touched
