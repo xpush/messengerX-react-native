@@ -139,15 +139,8 @@ public class XPushModule extends ReactContextBaseJavaModule {
     };
 
     @ReactMethod
-    public void init(String appId, String userId, String deviceId) {
-        this.mAppId = appId;
-        this.mUserId = userId;
-        this.mDeviceId = deviceId;
-    }
-
-    @ReactMethod
     public void connect(ReadableMap map, Callback callback) {
-        mChannelCore = new ChannelCore(mAppId,  mUserId,  mDeviceId, map.getString("C"), map.getString("URL"), map.getString("S") );
+        mChannelCore = new ChannelCore(map.getString("appId"),  map.getString("userId"),  map.getString("deviceId"), map.getString("channel"), map.getString("url"), map.getString("name") );
         connectionCallback = callback;
         connectChannel();
     }

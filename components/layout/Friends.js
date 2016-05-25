@@ -30,8 +30,7 @@ var XPushNative = require('../modules/xpush');
 
 XPushNative.init( 'http://54.178.160.166:8000', 'messengerx' );
 
-XPushNative._getChannelInfo( 'channel01', function(err, data){
-  console.log( '11111' );
+XPushNative.connect( 'channel01', function(err, data){
   console.log( data );
 });
 

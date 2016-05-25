@@ -18,84 +18,37 @@ var XPush = {
     this.appId = appId;
     return this;
   },
-  _getChannelInfo: function(channel, cb) {
-    var self = this;
-    this.ajax( self.Context.NODE+'/'+self.appId+'/'+channel , 'GET', {}, cb);
+  ajax: function(url, cb){
+    fetch(url)
+    .then((response) => response.json())
+    .then((responseJson) => {
+
+      if( responseJson.status == 'ok' ){
+        cb( null, responseJson.result )
+      } else {
+        cb( responseJson.status )
+      }
+    })
+    .catch((error) => {
+      cb(error);
+    });
   },
-  ajax : function(context, method, data, headers, cb){
+  getNode: function(channel, cb) {
     var self = this;
-
-    if(typeof(headers) == 'function' && !cb){
-      cb = headers;
-      headers = false;
-    }
-
-    var xhr;
-    try{
-      xhr = new XMLHttpRequest();
-    }catch (e){
-      try{
-        xhr = new XDomainRequest();
-      } catch (e){
-        try{
-          xhr = new ActiveXObject('Msxml2.XMLHTTP');
-        }catch (e){
-          try{
-            xhr = new ActiveXObject('Microsoft.XMLHTTP');
-          }catch (e){
-            console.error('\nYour browser is not compatible with XPUSH AJAX');
-          }
-        }
-      }
-    }
-
-    var _url = self.hostname+context;
-
-    var param = Object.keys(data).map(function(k) {
-      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
-    }).join('&');
-
-    method = (method.toLowerCase() == "get") ? "GET":"POST";
-    param  = (param == null || param == "") ? null : param;
-    if(method == "GET" && param != null){
-      _url = _url + "?" + param;
-    }
-
-    xhr.open(method, _url, true);
-    xhr.onreadystatechange = function() {
-
-      if(xhr.readyState < 4) {
-        return;
-      }
-
-      if(xhr.status !== 200) {
-        debug("xpush : ajax error", self.hostname+context,param);
-        cb(xhr.status,{});
-      }
-
-      if(xhr.readyState === 4) {
-        var r = JSON.parse(xhr.responseText);
-        if(r.status != 'ok'){
-          cb(r.status,r.message);
-        }else{
-          cb(null,r);
-        }
-      }
-    };
-
-    debug("xpush : ajax ", self.hostname+context,method,param);
-
-    if(headers) {
-      for (var key in headers) {
-        if (headers.hasOwnProperty(key)) {
-          xhr.setRequestHeader(key, headers[key]);
-        }
-      }
-    }
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send( (method == "POST") ? param : null);
-
-    return;
+    var url = self.hostname+self.Context.NODE+'/'+self.appId+'/'+channel;
+    self.ajax(url, cb);
+  },
+  connect: function(channel, cb){
+    var self = this;
+    self.getNode(channel, function( err, data ){
+      var param = data.server;
+      param.appId = self.appId;
+      param.userId = 'user01';
+      param.deviceId = 'web';
+      XPushNativeAndroid.connect( param, function(result){
+        cb( null, result );
+      });
+    });
   }
 }
 
