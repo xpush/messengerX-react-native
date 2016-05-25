@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.internal.BundleJSONConverter;
@@ -33,7 +34,7 @@ import io.socket.engineio.client.EngineIOException;
 public class XPushModule extends ReactContextBaseJavaModule {
 
 
-    private static final String REACT_CLASS = "XPushAndroid";
+    private static final String REACT_CLASS = "XPushNativeAndroid";
 
     private static final String CONTEXT_GLOBAL = "global";
     private static final String CONTEXT_CHANNEL = "channel";
@@ -47,6 +48,9 @@ public class XPushModule extends ReactContextBaseJavaModule {
     private Promise connectionPromise;
     private Callback connectionCallback;
 
+    private String mAppId;
+    private String mUserId;
+    private String mDeviceId;
 
     public XPushModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -135,9 +139,15 @@ public class XPushModule extends ReactContextBaseJavaModule {
     };
 
     @ReactMethod
-    public void connect(String appId, String mUserId, String mDeviceId, String channelId, String serveUrl, String serverName, Callback callback) {
-        mChannelCore = new ChannelCore(appId,  mUserId,  mDeviceId,  channelId,  serveUrl,  serverName);
-        //connectionPromise = promise;
+    public void init(String appId, String userId, String deviceId) {
+        this.mAppId = appId;
+        this.mUserId = userId;
+        this.mDeviceId = deviceId;
+    }
+
+    @ReactMethod
+    public void connect(ReadableMap map, Callback callback) {
+        mChannelCore = new ChannelCore(mAppId,  mUserId,  mDeviceId, map.getString("C"), map.getString("URL"), map.getString("S") );
         connectionCallback = callback;
         connectChannel();
     }

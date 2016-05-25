@@ -5,7 +5,7 @@ import {Actions} from 'react-native-router-flux'
 import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
-var XPush = require('../libs/xpush');
+var XPush = require('../libs/xpush.js');
 var Utils = require('../Utils');
 
 
@@ -26,20 +26,28 @@ for ( var i =0 ; i < TESTED_COUNT ; i++){
 }
 */
 
-var XPushAndroid = NativeModules.XPushAndroid;
+var XPushNative = require('../modules/xpush');
+
+XPushNative.init( 'http://54.178.160.166:8000', 'messengerx' );
+
+XPushNative._getChannelInfo( 'channel01', function(err, data){
+  console.log( '11111' );
+  console.log( data );
+});
 
 var Friends = React.createClass({
 
   componentDidMount() {
-    //XPushAndroid.test();
-    XPushAndroid.connect( "messengerx", "james", "web", "channel01", "http://54.65.166.203:8080", "10", function(){
+    /**
+    XPushNative.connect( "channel01", function(){
       console.log( '--- connected --- ' );
-      XPushAndroid.send( "한글" );
+      XPushNative.send( "한글" );
     });
 
     DeviceEventEmitter.addListener( 'onMessage', function(message){
       console.log( message );
     });
+    */
   },
 
   /**
