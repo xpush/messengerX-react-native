@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -18,6 +19,7 @@ import com.facebook.internal.BundleJSONConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,7 +135,7 @@ public class XPushModule extends ReactContextBaseJavaModule {
                     e.printStackTrace();
                 }
                 WritableMap map = Arguments.fromBundle(bundle);
-                sendEvent(mReactContext, "onMessage", map);
+                sendEvent(mReactContext, "xpush:message", map);
             }
         }
     };
@@ -151,9 +153,29 @@ public class XPushModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void send(String message){
+         public void send(String message){
         if( mChannelCore != null ){
             mChannelCore.sendMessage(message);
+        }
+    }
+
+    @ReactMethod
+    public void join(ReadableArray users, final Callback callback){
+        if( mChannelCore != null ){
+            ArrayList<String> userArrayList = new ArrayList<>();
+            for ( int inx = 0 ; inx < users.size() ; inx++){
+                userArrayList.add( users.getString(inx) );
+            }
+
+            if( userArrayList != null) {
+
+                mChannelCore.channelJoin(userArrayList, new CallbackEvent() {
+                    @Override
+                    public void call(Object... args) {
+                        callback.invoke("ok");
+                    }
+                });
+            }
         }
     }
 }

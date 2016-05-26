@@ -30,10 +30,6 @@ var XPushNative = require('../modules/xpush');
 
 XPushNative.init( 'http://54.178.160.166:8000', 'messengerx' );
 
-XPushNative.connect( 'channel01', function(err, data){
-  console.log( data );
-});
-
 var Friends = React.createClass({
 
   componentDidMount() {
@@ -47,6 +43,15 @@ var Friends = React.createClass({
       console.log( message );
     });
     */
+    XPushNative.connect( 'channel01', function(err, data){
+      console.log( data );
+
+      XPushNative.send( "한글" );
+    });
+
+    XPushNative.onMessage( function(data){
+      console.log( data );
+    });
   },
 
   /**

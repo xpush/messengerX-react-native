@@ -960,7 +960,7 @@
      */
     XPush.prototype.getGroupUsers = function(groupId,cb){
       var self = this;
-    if(typeof(arguments[0]) == 'function') {cb = arguments[0]; groupId = undefined;}
+      if(typeof(arguments[0]) == 'function') {cb = arguments[0]; groupId = undefined;}
       groupId = groupId ? groupId : self.userId;
       self.sEmit('group.list',{'GR': groupId}, function(err,result){
         cb(err,result);

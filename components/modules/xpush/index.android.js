@@ -12,6 +12,8 @@ var debug = function() {
 
 }
 
+var XPUSH_ON_MESSAGE = "xpush:message";
+
 var XPush = {
   init : function(host, appId) {
     this.hostname = host;
@@ -42,13 +44,24 @@ var XPush = {
     var self = this;
     self.getNode(channel, function( err, data ){
       var param = data.server;
+
       param.appId = self.appId;
       param.userId = 'user01';
       param.deviceId = 'web';
+
       XPushNativeAndroid.connect( param, function(result){
         cb( null, result );
       });
     });
+  },
+  send: function(message){
+    XPushNativeAndroid.send(message); 
+  },
+  onMessage: function(cb){
+    DeviceEventEmitter.addListener( XPUSH_ON_MESSAGE, cb);
+  },
+  join: function(userIds, cb){
+    XPushNativeAndroid.join(userIds, cb);
   }
 }
 
