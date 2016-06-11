@@ -1,24 +1,41 @@
+'use strict';
+
 import React, {
-  Dimensions, 
-  Navigator, 
-  StyleSheet, 
-  Text, 
-  View, 
-  TouchableHighlight,
-  PushNotificationIOS,
-  AlertIOS,
+  Component,
+} from 'react';
+import {
+  Linking,
+  Platform,
+  ActionSheetIOS,
+  Dimensions,
+  View,
+  Text,
+  Navigator,
+  StyleSheet,
+  PushNotificationIOS
 } from 'react-native';
 
 var GiftedMessenger = require('react-native-gifted-messenger');
 var XPush = require('../libs/xpush');
 var SessionStore = require('../stores/SessionStore');
-var PushNotification = require('react-native-push-notification');
 
 var channelId  = "";
 
 var userObject;
 
-var Chat = React.createClass({
+class Chat extends Component {
+
+  constructor(props) {
+    super(props);
+    this._messages = [];
+
+    this.state = {
+      messages: this._messages,
+    }
+
+    this.handleSend = this.handleSend.bind(this);
+  }
+
   componentDidMount() {
 
     PushNotificationIOS.addEventListener('notification', this._onNotification);
@@ -37,7 +54,18 @@ var Chat = React.createClass({
       }
 
       XPush.INSTANCE.on('message', function(ch,name,data){
-        self.handleReceive( data );
+
+        if( data.UO.U != userObject.U ){
+          var message = {
+            text: data.MG, 
+            name: data.UO.U, 
+            //image: {uri: data.UO.I}, 
+            position: 'left', 
+            date: new Date(data.TS),
+            uniqueId : data.C+"_"+data.TS
+          };
+          self.handleReceive( message );
+        }
       });
 
       XPush.INSTANCE.getUnreadMessage( channelId, function(err, messages) {
@@ -56,14 +84,16 @@ var Chat = React.createClass({
           } else {
             image = null;
           }
+          var uniqueId = data.C+"_"+data.TS
 
-          var tmpMsg = {text: decodeURIComponent(data.MG), name: data.UO.NM, image: image, position: side, date: new Date(data.TS)}
-          self._GiftedMessenger.appendMessage(tmpMsg);
+          var tmpMsg = {text: decodeURIComponent(data.MG), name: data.UO.NM, image: image, position: side, date: new Date(data.TS), uniqueId:uniqueId}
+          self.setMessages(self._messages.concat(tmpMsg));
         }
       });
     });
 
-  },
+  }
+
   _onNotification(notification){
     AlertIOS.alert(
       'Notification Received',
@@ -73,36 +103,30 @@ var Chat = React.createClass({
         onPress: null,
       }]
     );
-  },
-  getMessages() {
-    return [];
-  },
-  handleSend(message = {}, rowID = null) {
+  }
+
+  setMessages(messages) {
+    this._messages = messages;
+
+    // append the message
+    this.setState({
+      messages: messages,
+    });
+  }
+
+  handleSend(message = {}) {
     // Send message.text to your server
     var msg = encodeURIComponent( message.text  );
     XPush.INSTANCE.send( channelId, 'message', { 'MG': msg, "UO" : {'NM':userObject.DT.NM,'I':userObject.DT.I,'U':userObject.U} } );
-  },
-  handleReceive(data) {
+  
+    message.uniqueId = Math.round(Math.random() * 10000); // simulating server-side unique id generation
+    this.setMessages(this._messages.concat(message));
+  }
 
-    if( data.UO.U != userObject.U ) {
-      this._GiftedMessenger.appendMessage({
-        text: decodeURIComponent(data.MG), 
-        name: data.UO.NM, 
-        image: {uri: data.UO.I}, 
-        position: 'left', 
-        date: new Date(data.TS),
-      });
-    }
+  handleReceive(message = {}) {
+    this.setMessages(this._messages.concat(message));
+  }
 
-    require('RCTDeviceEventEmitter').emit('remoteNotificationReceived', {
-      aps: {
-        alert: 'Sample local notification',
-        badge: '+1',
-        sound: 'default',
-        category: 'REACT_NATIVE'
-      },
-    });
-  },
   render() {
 
     return (
@@ -114,25 +138,23 @@ var Chat = React.createClass({
         <GiftedMessenger
           ref={(c) => this._GiftedMessenger = c}
 
-          messages={this.getMessages()}
-          handleSend={this.handleSend}
-          maxHeight={Dimensions.get('window').height - 64} // 64 for the navBar
-
           styles={{
-            bubbleLeft: {
-              backgroundColor: '#e6e6eb',
-              marginRight: 70,
-            },
             bubbleRight: {
-              backgroundColor: '#007aff',
               marginLeft: 70,
+              backgroundColor: '#007aff',
             },
           }}
+
+          autoFocus={false}
+
+          messages={this.state.messages}
+          handleSend={this.handleSend.bind(this)}
+          maxHeight={Dimensions.get('window').height - 64} // 64 for the navBar
         />
       </View>
     );
-  },
-});
+  }
+}
 
 var styles = StyleSheet.create({
    container: {

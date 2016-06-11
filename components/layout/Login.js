@@ -1,27 +1,21 @@
-var React = require('react-native');
-var XPush = require('../libs/xpush');
 
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+
+var XPush = require('../libs/xpush');
 
 window.navigator.userAgent = 'react-native';
 
-var {
-  View,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  StyleSheet
-} = React;
-
 var SessionStore = require('../stores/SessionStore');
 
-var Login = React.createClass({
-  getInitialState: function() {
+class Login extends Component {
+  getInitialState() {
     return {
       userId: ''
     };
-  },
-  render: function() {
+  }
+  render() {
     return (
       <View style={styles.container}>
         <View style={styles.loginContainer}>
@@ -54,8 +48,8 @@ var Login = React.createClass({
         </View>
       </View>
     );
-  },
-  onPress: function() {
+  }
+  onPress() {
     var self = this;
     XPush.INSTANCE.login( this.state.userId, this.state.password, 'ionic', function(err, result){
       var user = result.user;
@@ -65,7 +59,7 @@ var Login = React.createClass({
       });
     });
   }
-});
+};
 
 var styles = StyleSheet.create({
   container: {

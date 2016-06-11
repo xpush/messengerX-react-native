@@ -1,5 +1,9 @@
-var React = require('react-native');
-var {
+import React, {
+  Component,
+} from 'react';
+
+
+import {
   StyleSheet,
   Text,
   Image,
@@ -7,7 +11,7 @@ var {
   PixelRatio,
   TouchableHighlight,
   PushNotificationIOS
-} = React;
+} from 'react-native'
 
 import {Actions} from 'react-native-router-flux'
 var GiftedListView = require('react-native-gifted-listview');
@@ -15,7 +19,7 @@ var GiftedListView = require('react-native-gifted-listview');
 var XPush = require('../libs/xpush');
 var Utils = require('../Utils');
 
-var Friends = React.createClass({
+class Channels extends Component {
 
   /**
    * Will be called when refreshing
@@ -28,7 +32,7 @@ var Friends = React.createClass({
     XPush.INSTANCE.getChannels( function( err, channels ){
       callback( channels );
     });
-  },
+  }
 
 
   /**
@@ -37,7 +41,7 @@ var Friends = React.createClass({
    */
   _onPress(rowData) {
     Actions.chat({'data':{'C':rowData.channel,'NM':rowData.NM}});
-  },
+  }
 
   /**
    * Render a row
@@ -74,7 +78,7 @@ var Friends = React.createClass({
           </View>
         </TouchableHighlight>
         );
-  },
+  }
 
   render() {
     return (
@@ -101,7 +105,7 @@ var Friends = React.createClass({
       </View>
     );
   }
-});
+};
 
 var styles = {
   container: {
@@ -152,4 +156,4 @@ var styles = {
   }
 };
 
-module.exports = Friends;
+module.exports = Channels;

@@ -1,7 +1,8 @@
 
 'use strict';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native'
 
-import React, {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
 var Constants = require('../Constants');
@@ -29,7 +30,7 @@ var styles = StyleSheet.create({
     }
 });
 
-class Splash extends React.Component {
+class Splash extends Component {
     componentDidMount() {
         setTimeout(function(){
             SessionStore.get(function(user){

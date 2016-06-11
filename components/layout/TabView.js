@@ -1,12 +1,14 @@
 'use strict';
 
-var React = require('react-native');
-var {View, Text, StyleSheet} = React;
+
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native'
+
 var Button = require('react-native-button');
 var Actions = require('react-native-router-flux').Actions;
 
 
-class TabView extends React.Component {
+class TabView extends Component {
     render(){
         return (
             <View style={styles.container}>

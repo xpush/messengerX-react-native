@@ -1,8 +1,9 @@
 
-import React, {StyleSheet, Text, Image, View, PixelRatio, TouchableHighlight, NativeModules, DeviceEventEmitter } from 'react-native'
+import React, {Component} from 'react';
+
+import {StyleSheet, Text, Image, View, PixelRatio, TouchableHighlight, NativeModules, DeviceEventEmitter } from 'react-native'
 
 import {Actions} from 'react-native-router-flux'
-import faker from 'faker'
 var GiftedListView = require('react-native-gifted-listview');
 
 var XPush = require('../libs/xpush.js');
@@ -11,48 +12,16 @@ var Utils = require('../Utils');
 
 var TESTED_COUNT = 10;
 
-/*
-var Tested_data = []
+class Friends extends Component {
 
-for ( var i =0 ; i < TESTED_COUNT ; i++){
-  Tested_data.push(
-    {id: faker.internet.email(),
-    picture: "http://quinnpalmer.co/wp-content/uploads/2013/04/Circle-Profile.png",
-    name:  faker.name.findName(),
-    text: faker.lorem.sentence(),
-    date: faker.date.past()
-   }
-  ) 
-}
-*/
-
-var XPushNative = require('../modules/xpush');
-
-XPushNative.init( 'http://54.178.160.166:8000', 'messengerx' );
-
-var Friends = React.createClass({
+  constructor(props) {
+    super(props);
+    this._onPress = this._onPress.bind(this);
+    this._renderRowView = this._renderRowView.bind(this);
+  }
 
   componentDidMount() {
-    /**
-    XPushNative.connect( "channel01", function(){
-      console.log( '--- connected --- ' );
-      XPushNative.send( "한글" );
-    });
-
-    DeviceEventEmitter.addListener( 'onMessage', function(message){
-      console.log( message );
-    });
-    */
-    XPushNative.connect( 'channel01', function(err, data){
-      console.log( data );
-
-      XPushNative.send( "한글" );
-    });
-
-    XPushNative.onMessage( function(data){
-      console.log( data );
-    });
-  },
+  }
 
   /**
    * Will be called when refreshing
@@ -65,7 +34,7 @@ var Friends = React.createClass({
     XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
       callback( users );
     });
-  },
+  }
 
   /**
    * When a row is touched
@@ -76,7 +45,7 @@ var Friends = React.createClass({
     jsonObject.U = [rowData.U,XPush.INSTANCE.userId];
     var channelId = Utils.generateChannelId( jsonObject );
     Actions.chat({'data':{'C':channelId,'US':jsonObject.U,'NM':rowData.DT.NM}});
-  },
+  }
 
   /**
    * Render a row
@@ -109,7 +78,7 @@ var Friends = React.createClass({
           </View>
         </TouchableHighlight>
         );
-  },
+  }
 
   render() {
     return (
@@ -136,7 +105,7 @@ var Friends = React.createClass({
       </View>
     );
   }
-});
+};
 
 var styles = {
   container: {
