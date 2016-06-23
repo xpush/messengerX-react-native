@@ -1,6 +1,7 @@
 'use strict';
 
-import React, {AppRegistry, Navigator, StyleSheet, Text, View} from 'react-native'
+import React, {Component} from 'react';
+import {AppRegistry, Navigator, StyleSheet, Text, View} from 'react-native'
 import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
 
 import FriendsTab from './layout/Friends'
@@ -8,6 +9,7 @@ import ChannelsTab from './layout/Channels'
 import TabView from './layout/TabView'
 import Splash from './layout/Splash'
 import Login from './layout/Login'
+import Register from './layout/Register'
 import Chat from './layout/Chat'
 
 
@@ -20,7 +22,7 @@ var xpush = new XPush('http://54.178.160.166:8000', 'messengerx', function (type
 
 //xpush.enableDebug();
 
-class TabIcon extends React.Component {
+class TabIcon extends Component {
   render(){
     return (
       <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
@@ -28,7 +30,7 @@ class TabIcon extends React.Component {
   }
 }
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <Router hideNavBar={true} name="root">
@@ -37,6 +39,7 @@ class App extends React.Component {
         <Schema name="withoutAnimation"/>
         <Schema name="tab" type="switch" icon={TabIcon} />
         <Route name="login" component={Login} title="Login"/>
+        <Route name="register" component={Register} title="Register" type="push" showNavigationBar={true}/>
         <Route name="tabbar">
           <Router footer={TabBar} showNavigationBar={false} tabBarStyle={{borderTopColor:'#00bb00',borderTopWidth:1,backgroundColor:'white'}}>
             <Route name="friendsTab" schema="tab" title="Friends"  >

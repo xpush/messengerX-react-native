@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableHighlight, Image} from 'react-native'
+import {View, Text, TextInput, StyleSheet, TouchableHighlight, Image, AlertIOS} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
 var XPush = require('../libs/xpush');
@@ -13,25 +13,8 @@ class Login extends Component {
 
   constructor(props) {
     super(props);
-    this._onPressLogin = this._onPressLogin.bind(this);
-    this._onPressSignUpLink = this._onPressSignUpLink.bind(this);
+    this._onPress = this._onPress.bind(this);
     this.state = {userId: ''};
-  }
-
-  _onPressLogin() {
-    var self = this;
-    XPush.INSTANCE.login( this.state.userId, this.state.password, 'messengerx', function(err, result){
-      var user = result.user;
-      user.PW = self.state.password;
-      SessionStore.save( user, function(res){
-        Actions.tabbar();
-      });
-    });
-  }
-
-  _onPressSignUpLink() {
-    var self = this;
-    Actions.register({});
   }
 
   render() {
@@ -59,22 +42,43 @@ class Login extends Component {
             multiline={false}
             />
 
+          <TextInput
+            autoCapitalize="none"
+            style={styles.input}
+            value={this.state.confirmPassword}
+            onChangeText={(text) => this.setState({confirmPassword: text})}
+            placeholder={'Enter Confirm Password'}
+            secureTextEntry={true}
+            maxLength={12}
+            multiline={false}
+            />
+
           <TouchableHighlight
             style={styles.button}
             underlayColor={'#328FE6'}
-            onPress={this._onPressLogin}
+            onPress={this._onPress}
             >
-            <Text style={styles.label}>LOGIN</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight onPress={this._onPressSignUpLink}>
-            <Text>
-            Don't have an account? SignUp here!
-            </Text>
+            <Text style={styles.label}>Register</Text>
           </TouchableHighlight>
         </View>
       </View>
     );
+  }
+  _onPress() {
+    if( this.state.password != this.state.confirmPassword  ){
+      AlertIOS.alert(
+        '',
+        'Please check password.'
+      );
+      return;
+    }
+
+    var self = this;
+    XPush.INSTANCE.signup( this.state.userId, this.state.password, 'messengerx', function(err, result){
+      if( result.status == "ok" ){
+        Actions.login({});        
+      }
+    });
   }
 };
 

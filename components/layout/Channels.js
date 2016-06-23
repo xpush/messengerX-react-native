@@ -1,7 +1,4 @@
-import React, {
-  Component,
-} from 'react';
-
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -20,6 +17,12 @@ var XPush = require('../libs/xpush');
 var Utils = require('../Utils');
 
 class Channels extends Component {
+
+  constructor(props) {
+    super(props);
+    this._onPress = this._onPress.bind(this);
+    this._renderRowView = this._renderRowView.bind(this);
+  }
 
   /**
    * Will be called when refreshing
