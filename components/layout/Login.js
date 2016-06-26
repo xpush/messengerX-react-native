@@ -15,17 +15,19 @@ class Login extends Component {
     super(props);
     this._onPressLogin = this._onPressLogin.bind(this);
     this._onPressSignUpLink = this._onPressSignUpLink.bind(this);
-    this.state = {userId: ''};
+    this.state = {userId: '',password:''};
   }
 
   _onPressLogin() {
     var self = this;
     XPush.INSTANCE.login( this.state.userId, this.state.password, 'messengerx', function(err, result){
-      var user = result.user;
-      user.PW = self.state.password;
-      SessionStore.save( user, function(res){
-        Actions.tabbar();
-      });
+      if( !err ){
+        var user = result.user;
+        user.PW = self.state.password;
+        SessionStore.save( user, function(res){
+          Actions.tabbar();
+        });
+      }
     });
   }
 

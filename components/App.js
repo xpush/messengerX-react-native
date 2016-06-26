@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react';
 import {AppRegistry, Navigator, StyleSheet, Text, View} from 'react-native'
-import {Router, Route, Schema, Animations, TabBar} from 'react-native-router-flux'
+import {Scene, Router, TabBar, Modal, Schema, Actions, Reducer} from 'react-native-router-flux'
 
 import FriendsTab from './layout/Friends'
 import ChannelsTab from './layout/Channels'
@@ -22,40 +22,52 @@ var xpush = new XPush('http://54.178.160.166:8000', 'messengerx', function (type
 
 //xpush.enableDebug();
 
-class TabIcon extends Component {
+class TabIcon extends React.Component {
   render(){
     return (
-      <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
+        <Text style={{color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
     );
   }
 }
 
+const styles = StyleSheet.create({
+    container: {flex:1, backgroundColor:"transparent",justifyContent: "center",
+        alignItems: "center",}
+
+});
+
+const reducerCreate = params=>{
+    const defaultReducer = Reducer(params);
+    return (state, action)=>{
+        return defaultReducer(state, action);
+    }
+};
+
+
 class App extends Component {
   render() {
     return (
-      <Router hideNavBar={true} name="root">
-        <Schema name="modal" sceneConfig={Navigator.SceneConfigs.FloatFromBottom}/>
-        <Schema name="default" sceneConfig={Navigator.SceneConfigs.FloatFromRight}/>
-        <Schema name="withoutAnimation"/>
-        <Schema name="tab" type="switch" icon={TabIcon} />
-        <Route name="login" component={Login} title="Login"/>
-        <Route name="register" component={Register} title="Register" type="push" showNavigationBar={true}/>
-        <Route name="tabbar">
-          <Router footer={TabBar} showNavigationBar={false} tabBarStyle={{borderTopColor:'#00bb00',borderTopWidth:1,backgroundColor:'white'}}>
-            <Route name="friendsTab" schema="tab" title="Friends"  >
-              <Router>
-                <Route name="Friends" component={FriendsTab} title="Friends" />
-              </Router>
-            </Route>
-            <Route name="channelTab" schema="tab" title="Channels"  >
-              <Router>
-                <Route name="Channels" component={ChannelsTab} title="Channels" />
-              </Router>
-            </Route>
-          </Router>
-        </Route>
-        <Route name="chat" component={Chat} title="Chat" />
-        <Route name="splash" component={Splash} initial={true} wrapRouter={true} title="Splash"/>
+      <Router createReducer={reducerCreate} sceneStyle={{backgroundColor:'#FFFFFF'}}>
+        <Scene key="modal" component={Modal} >
+          <Scene key="root" hideNavBar={true}>
+            <Scene key="login">
+                <Scene key="loginModal" component={Login} title="Login" hideNavBar={true} />
+                <Scene key="register" component={Register} title="Register" hideNavBar={false}/>
+            </Scene>
+            <Scene key="splash" component={Splash} initial={true} title="Splash" type="replace"/>
+
+            <Scene key="tabbar" tabs={true} default="tab1" >
+              <Scene key="friendsTab" title="Friends" initial={true} icon={TabIcon}  >
+                <Scene key="Friends" component={FriendsTab} title="Friends" />
+              </Scene>
+              <Scene key="channelTab" title="Channels" initial={false} icon={TabIcon} >
+                <Scene key="Channels" component={ChannelsTab} title="Channels" />
+              </Scene>
+            </Scene>
+
+            <Scene key="chat" component={Chat} title="Chat" />
+          </Scene>
+        </Scene>
       </Router>
     );
   }

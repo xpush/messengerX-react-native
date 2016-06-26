@@ -32,9 +32,12 @@ class Channels extends Component {
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    XPush.INSTANCE.getChannels( function( err, channels ){
-      callback( channels );
-    });
+    console.log( XPush.INSTANCE );
+    if( XPush.INSTANCE ){
+      XPush.INSTANCE.getChannels( function( err, channels ){
+        callback( channels );
+      });
+    }
   }
 
 

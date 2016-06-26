@@ -6,13 +6,16 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "^0.14.8",
-    "react-native": "^0.24.1",
+    "react": "15.0.2",
+    "react-native": "^0.26.1",
     "react-native-button": "^1.4.2",
     "react-native-gifted-listview": "0.0.15",
     "react-native-gifted-messenger": "0.1.4",
-    "react-native-router-flux": "^2.3.1",
-    "react-native-tabs": "^0.1.10",
-    "socket.io-client":"^1.4.6"
+    "react-native-router-flux": "^3.30.2",
+    "react-native-tabs": "^1.0.8",
+    "socket.io-client": "^1.4.6"
+  },
+  "devDependencies": {
+    "rnpm-plugin-upgrade": "^0.26.0"
   }
 }

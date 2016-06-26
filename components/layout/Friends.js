@@ -31,9 +31,11 @@ class Friends extends Component {
    * @param {object} options Inform if first load
    */
   _onFetch(page = 1, callback, options) {
-    XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
-      callback( users );
-    });
+    if( XPush.INSTANCE ){
+      XPush.INSTANCE.getGroupUsers( XPush.INSTANCE.userId, function( err, users ){
+        callback( users );
+      });
+    }
   }
 
   /**

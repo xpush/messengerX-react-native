@@ -35,13 +35,13 @@ class Splash extends Component {
         setTimeout(function(){
             SessionStore.get(function(user){
 
-              if( !user ){
-                Actions.login();  
-              } else {
-                XPush.INSTANCE.login( user.U, user.PW, 'ionic', function(err, result){
-                    Actions.tabbar();
-                });
-              }
+                if( !user ){
+                    Actions.login();  
+                } else {
+                    XPush.INSTANCE.login( user.U, user.PW, 'messengerx', function(err, result){
+                        Actions.tabbar();
+                    });
+                }
             });
 
         }, 1000 ) 
